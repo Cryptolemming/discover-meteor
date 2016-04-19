@@ -18,8 +18,9 @@ Posts.allow({
 });
 
 Posts.deny({
-	update: function(userId, post, fieldName) {
-		return (_.without(fieldNames, 'url', 'title').length > 0);
+	update: function(userId, post, fieldNames, modifier) {
+		var errors = validatePost(modifier.$set);
+		return errors.title || errors.url;
 	}
 });
 
