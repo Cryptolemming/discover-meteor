@@ -14,3 +14,10 @@ Package.onUse(function(api, where) {
   if (api.export)
     api.export('Errors');
 });
+
+Package.onTest(function(api) {
+	api.use('wallebot:errors', 'client');
+	api.use(['tinytest', 'test-helpers'], 'client');
+
+	api.addFiles('errors_test.js', 'client');
+});
