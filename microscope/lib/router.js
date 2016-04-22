@@ -3,7 +3,7 @@ Router.configure({
  loadingTemplate: 'loading',
  notFoundTemplate: 'notFound',
  waitOn: function() { 
- 	return [Meteor.subscribe('notificatoins')]
+ 	return Meteor.subscribe('notifications');
  }
 });
 
@@ -16,8 +16,8 @@ PostsListController = RouteController.extend({
 	findOptions: function() {
 		return {sort: {submitted: -1}, limit: this.postsLimit()};
 	},
-	waitOn: function() {
-		return Meteor.subscribe('posts', this.findOptions());
+	subscriptions: function() {
+		return this.postsSub = Meteor.subscribe('posts', this.findOptions());
 	},
 	posts: function() {
 		return {posts: Posts.find({}, this.findOptions())};
@@ -27,6 +27,7 @@ PostsListController = RouteController.extend({
 		var nextPath = this.route.path({postsLimit: this.postsLimit() + this.increment});
 		return {
 			posts: this.posts(),
+			ready: this.postsSub.ready,
 			nextPath: hasMore ? nextPath: null
 		};
 	}
